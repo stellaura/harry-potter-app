@@ -8,9 +8,33 @@
     <title>Harry Potter App</title>
   </head>
   <body>
-    <div class="logoContainer">
-      <img src="./pictures/Harry_Potter.png" alt="logo" />
+    <!-- TOP NAVIGATION -->
+    <nav>
+      <div class="logoContainer">
+        <img src="./pictures/Harry_Potter.png" alt="logo" class="logo" />
+      </div>
+    </nav>
+
+    <div class="dropdownContainer">
+      <label for="classes">Classes</label>
+      <select id="classes" class="dropdown"></select>
     </div>
-    <h1>Hello!</h1>
+
+    <hr />
+    <h1 class="tableTitle"></h1>
+    <h3 class="teacher"></h3>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>House</th>
+          <th>Grade</th>
+        </tr>
+      </thead>
+      <tbody class="classData"></tbody>
+    </table>
+
+    <script src="script.js"></script>
   </body>
 </html>
