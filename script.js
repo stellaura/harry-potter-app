@@ -7,6 +7,21 @@ const sortBtns = document.querySelector('.sortBtns')
 
 let recordsArray = []
 
+const sortEnums = {
+  UNORDERED: 'UNORDERED',
+  ASCENDING: 'ASCENDING',
+  DESCENDING: 'DESCENDING',
+}
+
+//deconstruction to emulate Enums
+const { UNORDERED, ASCENDING, DESCENDING } = sortEnums
+
+const sortState = {
+  name: UNORDERED,
+  house: UNORDERED,
+  grade: UNORDERED,
+}
+
 const classes = [
   {
     class: 'Potions',
@@ -227,17 +242,32 @@ const addGradesToStudents = grades => {
   )
 }
 
-const sortData = () => {
-  recordsArray.sort((record, nextRecord) =>
-    record.grade.localeCompare(nextRecord.grade)
-  )
+const changeSortDirection = type => {
+  sortState[type] =
+    sortState[type] === UNORDERED || sortState[type] === DESCENDING
+      ? ASCENDING
+      : DESCENDING
+}
+
+const sortData = type => {
+  changeSortDirection(type)
+
+  recordsArray.sort((record, nextRecord) => {
+    const comparison = record[type].localeCompare(nextRecord[type])
+
+    return sortState[type] === ASCENDING ? comparison : -comparison
+  })
 }
 
 const handleHermione = () => {
   const hermioneIndex = recordsArray.findIndex(record => record.grade === 'S')
+
   if (hermioneIndex > -1) {
     const hermioneRecord = recordsArray.splice(hermioneIndex, 1)
-    recordsArray.unshift(...hermioneRecord)
+
+    sortState.grade === ASCENDING
+      ? recordsArray.unshift(...hermioneRecord)
+      : recordsArray.push(...hermioneRecord)
   }
 }
 
@@ -255,46 +285,20 @@ const fillTable = () => {
   })
 }
 
-const handleGradeSort = () => {
-  sortData()
-  handleHermione()
-  fillTable()
-}
-
-const handleHouseSort = () => {
-  houseSort()
-  fillTable()
-}
-
-const handleNameSort = () => {
-  nameSort()
-  fillTable()
-}
-
-const houseSort = () => {
-  recordsArray.sort((record, nextRecord) =>
-    record.house.localeCompare(nextRecord.house)
-  )
-}
-
-const nameSort = () => {
-  recordsArray.sort((record, nextRecord) =>
-    record.name.localeCompare(nextRecord.name)
-  )
-}
-
 const handleSort = btn => {
   switch (btn) {
     case 'nameSort':
-      handleNameSort()
+      sortData('name')
       break
     case 'houseSort':
-      handleHouseSort()
+      sortData('house')
       break
     case 'gradeSort':
-      handleGradeSort()
+      sortData('grade')
+      handleHermione()
       break
   }
+  fillTable()
 }
 
 const handleClassSelect = className => {
