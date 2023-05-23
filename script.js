@@ -3,6 +3,9 @@ const dropdown = document.querySelector('.dropdown')
 const classData = document.querySelector('.classData')
 const tableTitle = document.querySelector('.tableTitle')
 const teacher = document.querySelector('.teacher')
+const sortBtns = document.querySelector('.sortBtns')
+
+let recordsArray = []
 
 const classes = [
   {
@@ -138,9 +141,8 @@ const students = [
   },
 ]
 // Array with objects, I can use array methods to receive values from it
-console.log(students)
 
-// Iterating over the array, and by each iteration, I create a new doc element which is the current elements' (object) "class" property, and I set the same value for the text content
+// Creating dropdown from classes
 for (let i = 0; i < classes.length; i++) {
   let option = document.createElement('option')
   option.setAttribute('value', classes[i].class)
@@ -148,45 +150,38 @@ for (let i = 0; i < classes.length; i++) {
   dropdown.append(option)
 }
 
-const fillData = data => {
-  tableTitle.textContent = data
-  const teach = classes.find(cl => cl.class === data).teacher
-  teacher.textContent = teach
+class Record {
+  name
+  house
+  grade
 
-  const selectedStudents = selectStudents()
-  const grades = gradeGenerator()
-
-  selectedStudents.forEach((student, i) => {
-    classData.innerHTML += `
-      <tr>
-        <td>${student.name}</td>
-        <td>${student.house}</td>
-        <td>${isHermione(student.name) ? 'S' : grades[i]}</td>
-      </tr>
-    `
-  })
+  constructor(name, house, grade) {
+    this.name = name
+    this.house = house
+    this.grade = grade
+  }
 }
 
-const isHermione = name => {
-  return name === 'Hermione Granger'
+const fillInTitleNTeacher = className => {
+  tableTitle.textContent = className
+  const teach = classes.find(cl => cl.class === className).teacher
+  teacher.textContent = teach
 }
 
 const selectStudents = () => {
-  const studentArray = []
-
-  while (studentArray.length < 10) {
+  recordsArray = []
+  while (recordsArray.length < 10) {
+    // creating a random number based on the length of the students, until recordsArray filled up with 10 number
     const randomIndex = Math.floor(Math.random() * students.length)
-
-    const findSameArr = studentArray.filter(
+    // this returns one element that matches to one in the recordsArray, can be either 0/1
+    const findSameArr = recordsArray.filter(
       student => student.name === students[randomIndex].name
     )
 
     if (findSameArr.length === 0) {
-      studentArray.push(students[randomIndex])
+      recordsArray.push(students[randomIndex])
     }
   }
-
-  return studentArray
 }
 
 const gradeGenerator = () => {
@@ -221,7 +216,100 @@ const gradeGenerator = () => {
   return grades
 }
 
-dropdown.addEventListener('change', event => {
+const addGradesToStudents = grades => {
+  recordsArray = recordsArray.map(
+    (record, i) =>
+      new Record(
+        record.name,
+        record.house,
+        record.name === 'Hermione Granger' ? 'S' : grades[i]
+      )
+  )
+}
+
+const sortData = () => {
+  recordsArray.sort((record, nextRecord) =>
+    record.grade.localeCompare(nextRecord.grade)
+  )
+}
+
+const handleHermione = () => {
+  const hermioneIndex = recordsArray.findIndex(record => record.grade === 'S')
+  if (hermioneIndex > -1) {
+    const hermioneRecord = recordsArray.splice(hermioneIndex, 1)
+    recordsArray.unshift(...hermioneRecord)
+  }
+}
+
+const fillTable = () => {
   classData.innerHTML = ''
-  fillData(event.target.value)
+
+  recordsArray.forEach(record => {
+    classData.innerHTML += `
+      <tr>
+        <td>${record.name}</td>
+        <td>${record.house}</td>
+        <td>${record.grade}</td>
+      </tr>
+    `
+  })
+}
+
+const handleGradeSort = () => {
+  sortData()
+  handleHermione()
+  fillTable()
+}
+
+const handleHouseSort = () => {
+  houseSort()
+  fillTable()
+}
+
+const handleNameSort = () => {
+  nameSort()
+  fillTable()
+}
+
+const houseSort = () => {
+  recordsArray.sort((record, nextRecord) =>
+    record.house.localeCompare(nextRecord.house)
+  )
+}
+
+const nameSort = () => {
+  recordsArray.sort((record, nextRecord) =>
+    record.name.localeCompare(nextRecord.name)
+  )
+}
+
+const handleSort = btn => {
+  switch (btn) {
+    case 'nameSort':
+      handleNameSort()
+      break
+    case 'houseSort':
+      handleHouseSort()
+      break
+    case 'gradeSort':
+      handleGradeSort()
+      break
+  }
+}
+
+const handleClassSelect = className => {
+  fillInTitleNTeacher(className)
+  selectStudents()
+  addGradesToStudents(gradeGenerator())
+  fillTable()
+}
+
+dropdown.addEventListener('change', event => {
+  handleClassSelect(event.target.value)
+})
+
+sortBtns.addEventListener('click', event => {
+  if (event.target.tagName === 'BUTTON') {
+    handleSort(event.target.classList[0])
+  }
 })
