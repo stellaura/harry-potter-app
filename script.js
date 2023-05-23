@@ -1,3 +1,6 @@
+const studentsUrl = 'http://192.168.0.103:8080/student/list'
+const classesUrl = 'http://192.168.0.103:8080/class/list'
+
 const tableBtn = document.querySelector('.choseClasses')
 const dropdown = document.querySelector('.dropdown')
 const classData = document.querySelector('.classData')
@@ -15,7 +18,7 @@ const sortEnums = {
 }
 
 //deconstruction to emulate Enums
-const { UNORDERED, ASCENDING, DESCENDING } = sortEnums
+const {UNORDERED, ASCENDING, DESCENDING} = sortEnums
 
 const sortState = {
   name: UNORDERED,
@@ -23,147 +26,149 @@ const sortState = {
   grade: UNORDERED,
 }
 
-const classes = [
-  {
-    class: 'Potions',
-    teacher: 'Severus Snape',
-  },
-  {
-    class: 'Transfiguration',
-    teacher: 'Minerva McGonagall',
-  },
-  {
-    class: 'Defense Against the Dark Arts',
-    teacher: 'Alastor "Mad-Eye" Moody',
-  },
-  {
-    class: 'Astronomy',
-    teacher: 'Aurora Sinistra',
-  },
-  {
-    class: 'Muggle Studies',
-    teacher: 'Charity Burbage',
-  },
-  {
-    class: 'History of magic',
-    teacher: 'Cuthbert Binns',
-  },
-  {
-    class: 'Charms',
-    teacher: 'Filius Flitwick',
-  },
-  {
-    class: 'Divination',
-    teacher: 'Sybill Trelawney',
-  },
-  {
-    class: 'Care of Magical Creaturesation',
-    teacher: 'Rubeus Hagrid',
-  },
-  {
-    class: 'Herbology',
-    teacher: 'Pomona Sprout',
-  },
+let classes = [
+  // {
+  //   class: 'Potions',
+  //   teacher: 'Severus Snape',
+  // },
+  // {
+  //   class: 'Transfiguration',
+  //   teacher: 'Minerva McGonagall',
+  // },
+  // {
+  //   class: 'Defense Against the Dark Arts',
+  //   teacher: 'Alastor "Mad-Eye" Moody',
+  // },
+  // {
+  //   class: 'Astronomy',
+  //   teacher: 'Aurora Sinistra',
+  // },
+  // {
+  //   class: 'Muggle Studies',
+  //   teacher: 'Charity Burbage',
+  // },
+  // {
+  //   class: 'History of magic',
+  //   teacher: 'Cuthbert Binns',
+  // },
+  // {
+  //   class: 'Charms',
+  //   teacher: 'Filius Flitwick',
+  // },
+  // {
+  //   class: 'Divination',
+  //   teacher: 'Sybill Trelawney',
+  // },
+  // {
+  //   class: 'Care of Magical Creaturesation',
+  //   teacher: 'Rubeus Hagrid',
+  // },
+  // {
+  //   class: 'Herbology',
+  //   teacher: 'Pomona Sprout',
+  // },
 ]
 
-const students = [
-  {
-    name: 'Harry Potter',
-    house: 'Gryffindor',
-  },
-  {
-    name: 'Hermione Granger',
-    house: 'Gryffindor',
-  },
-  {
-    name: 'Susan Bones',
-    house: 'Hufflepuff',
-  },
-  {
-    name: 'Hannah Abbott',
-    house: 'Hufflepuff',
-  },
-  {
-    name: 'Justin Finch-Fletchley',
-    house: 'Hufflepuff',
-  },
-  {
-    name: 'Cedric Diggory',
-    house: 'Hufflepuff',
-  },
-  {
-    name: 'Colin Creevey',
-    house: 'Gryffindor',
-  },
-  {
-    name: 'Lavender Brown',
-    house: 'Gryffindor',
-  },
-  {
-    name: 'Dennis Creevey',
-    house: 'Gryffindor',
-  },
-  {
-    name: 'Seamus Finnigan',
-    house: 'Gryffindor',
-  },
-  {
-    name: 'Percy Weasley',
-    house: 'Gryffindor',
-  },
-  {
-    name: 'Ron Weasley',
-    house: 'Gryffindor',
-  },
-  {
-    name: 'Ginny Weasley',
-    house: 'Gryffindor',
-  },
-  {
-    name: 'Neville Longbottom',
-    house: 'Gryffindor',
-  },
-  {
-    name: 'Terry Boot',
-    house: 'Ravenclaw',
-  },
-  {
-    name: 'Marietta Edgecombe',
-    house: 'Ravenclaw',
-  },
-  {
-    name: 'Vincent Crabbe',
-    house: 'Ravenclaw',
-  },
-  {
-    name: 'Luna Lovegood',
-    house: 'Ravenclaw',
-  },
-  {
-    name: 'Draco Malfoy',
-    house: 'Slytherin',
-  },
-  {
-    name: 'Millicent Bulstrode',
-    house: 'Slytherin',
-  },
-  {
-    name: 'Gregory Goyle',
-    house: 'Slytherin',
-  },
-  {
-    name: 'Pansy Parkinson',
-    house: 'Slytherin',
-  },
+let students = [
+  // {
+  //   name: 'Harry Potter',
+  //   house: 'Gryffindor',
+  // },
+  // {
+  //   name: 'Hermione Granger',
+  //   house: 'Gryffindor',
+  // },
+  // {
+  //   name: 'Susan Bones',
+  //   house: 'Hufflepuff',
+  // },
+  // {
+  //   name: 'Hannah Abbott',
+  //   house: 'Hufflepuff',
+  // },
+  // {
+  //   name: 'Justin Finch-Fletchley',
+  //   house: 'Hufflepuff',
+  // },
+  // {
+  //   name: 'Cedric Diggory',
+  //   house: 'Hufflepuff',
+  // },
+  // {
+  //   name: 'Colin Creevey',
+  //   house: 'Gryffindor',
+  // },
+  // {
+  //   name: 'Lavender Brown',
+  //   house: 'Gryffindor',
+  // },
+  // {
+  //   name: 'Dennis Creevey',
+  //   house: 'Gryffindor',
+  // },
+  // {
+  //   name: 'Seamus Finnigan',
+  //   house: 'Gryffindor',
+  // },
+  // {
+  //   name: 'Percy Weasley',
+  //   house: 'Gryffindor',
+  // },
+  // {
+  //   name: 'Ron Weasley',
+  //   house: 'Gryffindor',
+  // },
+  // {
+  //   name: 'Ginny Weasley',
+  //   house: 'Gryffindor',
+  // },
+  // {
+  //   name: 'Neville Longbottom',
+  //   house: 'Gryffindor',
+  // },
+  // {
+  //   name: 'Terry Boot',
+  //   house: 'Ravenclaw',
+  // },
+  // {
+  //   name: 'Marietta Edgecombe',
+  //   house: 'Ravenclaw',
+  // },
+  // {
+  //   name: 'Vincent Crabbe',
+  //   house: 'Ravenclaw',
+  // },
+  // {
+  //   name: 'Luna Lovegood',
+  //   house: 'Ravenclaw',
+  // },
+  // {
+  //   name: 'Draco Malfoy',
+  //   house: 'Slytherin',
+  // },
+  // {
+  //   name: 'Millicent Bulstrode',
+  //   house: 'Slytherin',
+  // },
+  // {
+  //   name: 'Gregory Goyle',
+  //   house: 'Slytherin',
+  // },
+  // {
+  //   name: 'Pansy Parkinson',
+  //   house: 'Slytherin',
+  // },
 ]
 // Array with objects, I can use array methods to receive values from it
 
 // Creating dropdown from classes
-for (let i = 0; i < classes.length; i++) {
-  let option = document.createElement('option')
-  option.setAttribute('value', classes[i].class)
-  option.textContent = classes[i].class
-  dropdown.append(option)
+const createDropdownList = () => {
+  for (let i = 0; i < classes.length; i++) {
+    let option = document.createElement('option')
+    option.setAttribute('value', classes[i].name)
+    option.textContent = classes[i].name
+    dropdown.append(option)
+  }
 }
 
 class Record {
@@ -180,7 +185,7 @@ class Record {
 
 const fillInTitleNTeacher = className => {
   tableTitle.textContent = className
-  const teach = classes.find(cl => cl.class === className).teacher
+  const teach = classes.find(cl => cl.name === className).teacher
   teacher.textContent = teach
 }
 
@@ -299,20 +304,18 @@ const handleSort = btn => {
   fillTable()
 }
 
-const handleClassSelect = className => {
+const handleClassSelect = async className => {
   fillInTitleNTeacher(className)
   selectStudents()
   addGradesToStudents(gradeGenerator())
   fillTable()
 }
 
-const studentsUrl = 'http://192.168.0.103:8080/student/list'
-const classesUrl = 'http://192.168.0.103:8080/class/list'
-
-async function fetchData() {
+const fetchData = async () => {
   try {
     const response = await fetch(studentsUrl)
-    const data = await response.json()
+    data = await response.json()
+    students = await data.data.students
     console.log(data)
   } catch (e) {
     console.error(e)
@@ -320,12 +323,37 @@ async function fetchData() {
 
   try {
     const response = await fetch(classesUrl)
-    const data = await response.json()
+    data = await response.json()
+    classes = await data.data.classes
+    createDropdownList()
     console.log(data)
   } catch (e) {
     console.error(e)
   }
 }
+
+//Same with fetch
+// const fetchData = () => {
+//   fetch(studentsUrl)
+//     .then(response => response.json())
+//     .then(data => {
+//       students = data.data.students
+//       console.log(students)
+//     })
+//     .catch(error => {
+//       console.error(error)
+//     })
+
+//   fetch(classesUrl)
+//     .then(response => response.json())
+//     .then(data => {
+//       classes = data.data.classes
+//       createDropdownList()
+//     })
+//     .catch(error => {
+//       console.error(error)
+//     })
+// }
 
 dropdown.addEventListener('change', event => {
   handleClassSelect(event.target.value)
@@ -337,4 +365,7 @@ sortBtns.addEventListener('click', event => {
   }
 })
 
-fetchBtn.addEventListener('click', fetchData)
+fetchBtn.addEventListener('click', () => {
+  fetchData()
+  fetchBtn.disabled = true
+})

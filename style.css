@@ -4,6 +4,10 @@
   margin: 10px;
 }
 
+.dropdown {
+  width: 204px;
+}
+
 table {
   border-collapse: collapse;
 }
