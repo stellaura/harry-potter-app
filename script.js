@@ -1,24 +1,21 @@
-const studentsUrl = 'http://192.168.0.103:8080/student/list'
-const classesUrl = 'http://192.168.0.103:8080/class/list'
+import Record from './model/Record.js'
+import { mock_students, mock_classes } from './mock/index.js'
+import { getStudents, getClasses } from './service/index.js'
+import { gradeGenerator } from './util/grade_generator.js'
+import { sortEnums } from './enum/sort_enum.js'
 
-const tableBtn = document.querySelector('.choseClasses')
 const dropdown = document.querySelector('.dropdown')
 const classData = document.querySelector('.classData')
 const tableTitle = document.querySelector('.tableTitle')
 const teacher = document.querySelector('.teacher')
 const sortBtns = document.querySelector('.sortBtns')
-const fetchBtn = document.querySelector('.fetchBtn')
+const spinner = document.querySelector('.spinner')
+const dropdownContainer = document.querySelector('.dropdownContainer')
 
 let recordsArray = []
 
-const sortEnums = {
-  UNORDERED: 'UNORDERED',
-  ASCENDING: 'ASCENDING',
-  DESCENDING: 'DESCENDING',
-}
-
 //deconstruction to emulate Enums
-const {UNORDERED, ASCENDING, DESCENDING} = sortEnums
+const { UNORDERED, ASCENDING, DESCENDING } = sortEnums
 
 const sortState = {
   name: UNORDERED,
@@ -26,139 +23,8 @@ const sortState = {
   grade: UNORDERED,
 }
 
-let classes = [
-  // {
-  //   class: 'Potions',
-  //   teacher: 'Severus Snape',
-  // },
-  // {
-  //   class: 'Transfiguration',
-  //   teacher: 'Minerva McGonagall',
-  // },
-  // {
-  //   class: 'Defense Against the Dark Arts',
-  //   teacher: 'Alastor "Mad-Eye" Moody',
-  // },
-  // {
-  //   class: 'Astronomy',
-  //   teacher: 'Aurora Sinistra',
-  // },
-  // {
-  //   class: 'Muggle Studies',
-  //   teacher: 'Charity Burbage',
-  // },
-  // {
-  //   class: 'History of magic',
-  //   teacher: 'Cuthbert Binns',
-  // },
-  // {
-  //   class: 'Charms',
-  //   teacher: 'Filius Flitwick',
-  // },
-  // {
-  //   class: 'Divination',
-  //   teacher: 'Sybill Trelawney',
-  // },
-  // {
-  //   class: 'Care of Magical Creaturesation',
-  //   teacher: 'Rubeus Hagrid',
-  // },
-  // {
-  //   class: 'Herbology',
-  //   teacher: 'Pomona Sprout',
-  // },
-]
-
-let students = [
-  // {
-  //   name: 'Harry Potter',
-  //   house: 'Gryffindor',
-  // },
-  // {
-  //   name: 'Hermione Granger',
-  //   house: 'Gryffindor',
-  // },
-  // {
-  //   name: 'Susan Bones',
-  //   house: 'Hufflepuff',
-  // },
-  // {
-  //   name: 'Hannah Abbott',
-  //   house: 'Hufflepuff',
-  // },
-  // {
-  //   name: 'Justin Finch-Fletchley',
-  //   house: 'Hufflepuff',
-  // },
-  // {
-  //   name: 'Cedric Diggory',
-  //   house: 'Hufflepuff',
-  // },
-  // {
-  //   name: 'Colin Creevey',
-  //   house: 'Gryffindor',
-  // },
-  // {
-  //   name: 'Lavender Brown',
-  //   house: 'Gryffindor',
-  // },
-  // {
-  //   name: 'Dennis Creevey',
-  //   house: 'Gryffindor',
-  // },
-  // {
-  //   name: 'Seamus Finnigan',
-  //   house: 'Gryffindor',
-  // },
-  // {
-  //   name: 'Percy Weasley',
-  //   house: 'Gryffindor',
-  // },
-  // {
-  //   name: 'Ron Weasley',
-  //   house: 'Gryffindor',
-  // },
-  // {
-  //   name: 'Ginny Weasley',
-  //   house: 'Gryffindor',
-  // },
-  // {
-  //   name: 'Neville Longbottom',
-  //   house: 'Gryffindor',
-  // },
-  // {
-  //   name: 'Terry Boot',
-  //   house: 'Ravenclaw',
-  // },
-  // {
-  //   name: 'Marietta Edgecombe',
-  //   house: 'Ravenclaw',
-  // },
-  // {
-  //   name: 'Vincent Crabbe',
-  //   house: 'Ravenclaw',
-  // },
-  // {
-  //   name: 'Luna Lovegood',
-  //   house: 'Ravenclaw',
-  // },
-  // {
-  //   name: 'Draco Malfoy',
-  //   house: 'Slytherin',
-  // },
-  // {
-  //   name: 'Millicent Bulstrode',
-  //   house: 'Slytherin',
-  // },
-  // {
-  //   name: 'Gregory Goyle',
-  //   house: 'Slytherin',
-  // },
-  // {
-  //   name: 'Pansy Parkinson',
-  //   house: 'Slytherin',
-  // },
-]
+let classes = mock_classes
+let students = mock_students
 // Array with objects, I can use array methods to receive values from it
 
 // Creating dropdown from classes
@@ -168,18 +34,6 @@ const createDropdownList = () => {
     option.setAttribute('value', classes[i].name)
     option.textContent = classes[i].name
     dropdown.append(option)
-  }
-}
-
-class Record {
-  name
-  house
-  grade
-
-  constructor(name, house, grade) {
-    this.name = name
-    this.house = house
-    this.grade = grade
   }
 }
 
@@ -203,38 +57,6 @@ const selectStudents = () => {
       recordsArray.push(students[randomIndex])
     }
   }
-}
-
-const gradeGenerator = () => {
-  const grades = []
-
-  while (grades.length < 10) {
-    const randomNum = Math.floor(Math.random() * 6) + 1
-
-    switch (randomNum) {
-      case 1:
-        grades.push('A')
-        break
-      case 2:
-        grades.push('B')
-        break
-      case 3:
-        grades.push('C')
-        break
-      case 4:
-        grades.push('D')
-        break
-      case 5:
-        grades.push('E')
-        break
-      case 6:
-        grades.push('F')
-        break
-      default:
-        console.log('invalid number')
-    }
-  }
-  return grades
 }
 
 const addGradesToStudents = grades => {
@@ -311,49 +133,35 @@ const handleClassSelect = async className => {
   fillTable()
 }
 
-const fetchData = async () => {
-  try {
-    const response = await fetch(studentsUrl)
-    data = await response.json()
-    students = await data.data.students
-    console.log(data)
-  } catch (e) {
-    console.error(e)
-  }
-
-  try {
-    const response = await fetch(classesUrl)
-    data = await response.json()
-    classes = await data.data.classes
-    createDropdownList()
-    console.log(data)
-  } catch (e) {
-    console.error(e)
+const toggleSpinner = () => {
+  if (spinner.style.display === 'none') {
+    spinner.style.display = 'block'
+    dropdownContainer.style.display = 'none'
+  } else {
+    spinner.style.display = 'none'
+    dropdownContainer.style.display = 'block'
   }
 }
 
-//Same with fetch
-// const fetchData = () => {
-//   fetch(studentsUrl)
-//     .then(response => response.json())
-//     .then(data => {
-//       students = data.data.students
-//       console.log(students)
-//     })
-//     .catch(error => {
-//       console.error(error)
-//     })
+const fetchData = async () => {
+  spinner.style.display = 'none'
+  toggleSpinner()
+  try {
+    students = await getStudents().data.students
+  } catch (e) {
+    toggleSpinner()
+    console.error(e)
+  }
 
-//   fetch(classesUrl)
-//     .then(response => response.json())
-//     .then(data => {
-//       classes = data.data.classes
-//       createDropdownList()
-//     })
-//     .catch(error => {
-//       console.error(error)
-//     })
-// }
+  try {
+    classes = await getClasses().data.classes
+    createDropdownList()
+    toggleSpinner()
+  } catch (e) {
+    toggleSpinner()
+    console.error(e)
+  }
+}
 
 dropdown.addEventListener('change', event => {
   handleClassSelect(event.target.value)
@@ -365,7 +173,4 @@ sortBtns.addEventListener('click', event => {
   }
 })
 
-fetchBtn.addEventListener('click', () => {
-  fetchData()
-  fetchBtn.disabled = true
-})
+document.addEventListener('DOMContentLoaded', createDropdownList)

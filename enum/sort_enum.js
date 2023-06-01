@@ -1,0 +1,5 @@
+export const sortEnums = {
+  UNORDERED: 'UNORDERED',
+  ASCENDING: 'ASCENDING',
+  DESCENDING: 'DESCENDING',
+}
