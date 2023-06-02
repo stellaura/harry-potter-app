@@ -11,6 +11,9 @@ const teacher = document.querySelector('.teacher')
 const sortBtns = document.querySelector('.sortBtns')
 const spinner = document.querySelector('.spinner')
 const dropdownContainer = document.querySelector('.dropdownContainer')
+const searchInput = document.querySelector('.searchInput')
+const searchBtn = document.querySelector('.searchBtn')
+const searchSelect = document.querySelector('.searchSelect')
 
 let recordsArray = []
 
@@ -96,10 +99,10 @@ const handleHermione = () => {
   }
 }
 
-const fillTable = () => {
+const fillTable = arr => {
   classData.innerHTML = ''
 
-  recordsArray.forEach(record => {
+  arr.forEach(record => {
     classData.innerHTML += `
       <tr>
         <td>${record.name}</td>
@@ -123,14 +126,15 @@ const handleSort = btn => {
       handleHermione()
       break
   }
-  fillTable()
+  fillTable(recordsArray)
 }
 
 const handleClassSelect = async className => {
   fillInTitleNTeacher(className)
   selectStudents()
   addGradesToStudents(gradeGenerator())
-  fillTable()
+  fillTable(recordsArray)
+  enableSearchField()
 }
 
 const toggleSpinner = () => {
@@ -141,6 +145,20 @@ const toggleSpinner = () => {
     spinner.style.display = 'none'
     dropdownContainer.style.display = 'block'
   }
+}
+
+const enableSearchField = () => {
+  searchInput.removeAttribute('disabled')
+}
+
+const handleSearch = () => {
+  const userInput = searchInput.value.toLowerCase()
+
+  const filteredArr = recordsArray.filter(
+    record => record[searchSelect.value].toLowerCase().includes(userInput)
+  )
+  
+  fillTable(userInput === '' ? recordsArray : filteredArr)
 }
 
 const fetchData = async () => {
@@ -172,5 +190,7 @@ sortBtns.addEventListener('click', event => {
     handleSort(event.target.classList[0])
   }
 })
+
+searchBtn.addEventListener('click', handleSearch)
 
 document.addEventListener('DOMContentLoaded', createDropdownList)
